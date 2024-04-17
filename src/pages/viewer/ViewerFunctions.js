@@ -1,6 +1,6 @@
-/* global Autodesk, THREE */
+/* global Autodesk */
 import Client from "../Auth";
-import axios from "axios";
+// import axios from "axios";
 
 var getToken = {accessToken: Client.getAccesstoken()};
 var viewer;

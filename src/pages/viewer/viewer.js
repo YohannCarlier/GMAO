@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import launchViewer from './ViewerFunctions';
 
-class viewer extends Component {
+class Viewer extends Component {
 
     componentDidMount(){
         
-        var documentId = 'urn:dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6cmVhY3Qtdmlld2VyLWdtYW8vcmFjYmFzaWNzYW1wbGVwcm9qZWN0LnJ2dA';
+        var documentId = 'urn:dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6cmVhY3Qtdmlld2VyLWdtYW8vU01fQXBhcnRtZW50LmdsYg';
         launchViewer('viewerDiv', documentId);
     }
     
@@ -16,4 +16,4 @@ class viewer extends Component {
     }
 }
 
-export default viewer;
+export default Viewer;

@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { AppBar, Toolbar, Typography, IconButton, Button, FormControl, Select, Dialog,
-    MenuItem, DialogTitle, DialogContentText, DialogContent, DialogActions, InputLabel } from '@mui/material';
+import { AppBar, Toolbar, Typography, IconButton, Button } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import Viewer from './viewer/viewer';
+import Viewer from './viewer/Viewer';
 // import { getSelection } from './Viewer/ViewerFunctions';
 
 class Home extends Component {
