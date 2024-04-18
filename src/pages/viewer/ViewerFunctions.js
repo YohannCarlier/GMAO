@@ -31,94 +31,31 @@ function launchViewer(div, urn){
         var documentId = urn;
         Autodesk.Viewing.Document.load(documentId, onDocumentLoadSuccess, onDocumentLoadFailure);
 
-        // viewer.addEventListener(Autodesk.Viewing.GEOMETRY_LOADED_EVENT, onGeometryLoaded);
-
         function onDocumentLoadSuccess(viewerDocument) {
             var defaultModel = viewerDocument.getRoot().getDefaultGeometry();
             viewer.loadDocumentNode(viewerDocument, defaultModel);
-        };
-        
-        function onDocumentLoadFailure() {
+            
+            // Ajouter l'écouteur d'événements après que le modèle a été chargé
+            viewer.addEventListener(Autodesk.Viewing.SELECTION_CHANGED_EVENT, onSelectionChange);
+          };
+      
+          function onDocumentLoadFailure() {
             console.error('Failed fetching Forge manifest');
-        };
-
-    })
+          };
+      
+          // Gestionnaire pour les changements de sélection
+          function onSelectionChange(event) {
+            if (event.dbIdArray.length > 0) {
+              const dbId = event.dbIdArray[0];
+              viewer.getProperties(dbId, (props) => {
+                // Log le GUID ici ou faites ce que vous voulez avec
+                console.log('GUID de l\'objet sélectionné:', props.externalId);
+                // Vous pouvez également utiliser un callback ou un événement pour envoyer le GUID à votre composant React
+              });
+            }
+          }
+        });
 };
 
-// function onGeometryLoaded(event){
-//     var viewer = event.target;
-
-//     viewer.removeEventListener(Autodesk.Viewing.GEOMETRY_LOADED_EVENT, onGeometryLoaded);
-// 	viewer.fitToView();
-
-//     viewer.model.getExternalIdMapping((data) => {
-
-//         axios.get('*your backend url/api/doors')
-//         .then((response) => {
-            
-//             var doorInfo = new Map();
-
-//             for(var i in response.data){
-                
-//                 Object.keys(data).forEach((key) => {
-
-//                     if(key == response.data[i]._id){
-//                         doorInfo.set(data[key], response.data[i].DoorFinish);
-//                     }
-//                 })
-//             };
-
-//             doorInfo.forEach((v, k) => {
-                
-//                 switch(v){
-//                     case 'Satin':
-//                         var blue = new THREE.Vector4(0, 0, 255, 1);
-//                         viewer.setThemingColor(k, blue);
-//                         break;
-//                     case 'Varnish':
-//                         var red = new THREE.Vector4(1, 0, 0, 1);
-//                         viewer.setThemingColor(k, red);
-//                         break;
-//                     case 'Veneer':
-//                         var yellow = new THREE.Vector4(255, 255, 0, 1);
-//                         viewer.setThemingColor(k, yellow);
-//                         break;
-//                     case 'Gloss':
-//                         var green = new THREE.Vector4(0, 255, 0, 1);
-//                         viewer.setThemingColor(k, green);
-//                         break;
-//                 }
-//             })
-//         }).catch((error) => console.log(error));
-//     }, (err) => console.log(err));
-// };
-
-// export function getSelection(DoorFinish){
-
-//     const dbId = viewer.getSelection()[0];
-
-//     if(viewer.getSelectionCount() !== 1){
-//         alert("Select Door Element");
-//     }
-//     else if(viewer.getSelectionCount() > 0){
-        
-//         viewer.model.getProperties(dbId, (item) => {
-
-//             var data = {
-//                 "_id": `${item.externalId}`,
-//                 "DoorFinish": DoorFinish
-//             };
-
-//             axios.patch('*your backend url/api/doors/update', data)
-//             .then((response) => {
-//                 alert("DoorFinish Value Updated");
-//                 window.location.reload();
-//             })
-//             .catch((err) => {
-//                 console.log(err);
-//             })
-//         });
-//     }
-// }
 
 export default launchViewer;

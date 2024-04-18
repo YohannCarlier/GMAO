@@ -5,7 +5,7 @@ class Viewer extends Component {
 
     componentDidMount(){
         
-        var documentId = 'urn:dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6cmVhY3Qtdmlld2VyLWdtYW8vU01fQXBhcnRtZW50LmdsYg';
+        var documentId = 'urn:dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6cmVhY3Qtdmlld2VyLWdtYW8vQUMyMC1JbnN0aXR1dGUtVmFyLTIuaWZj';
         launchViewer('viewerDiv', documentId);
     }
     
