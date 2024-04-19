@@ -103,7 +103,7 @@ class Home extends Component {
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               Yohann
             </Typography>
-            <Button v variant="contained"
+            <Button variant="contained"
                 sx={{ backgroundColor: '#000', color: '#fff' }} 
                 onClick={this.handleClickOpen}>
               Demande DI
