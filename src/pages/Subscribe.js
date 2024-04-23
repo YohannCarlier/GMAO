@@ -71,16 +71,19 @@ class Subscribe extends Component {
     }
   };
   render() {
+    if (sessionStorage.getItem('jwtToken')){
+      window.location.href = "/home";
+    }
     return (
       <div>
           <Box>
             <Typography id="modal-title" variant="h6" component="h2">
-              Formulaire de Connexion
+              Formulaire d'inscription
             </Typography>
             <Box component="form" noValidate autoComplete="off">
               <FormControl fullWidth sx={{ mt: 2 }}>
                 <TextField
-                  label="Date de la demande"
+                  label="Adresse Email"
                   type="email"
                   value={this.state.email}
                   onChange={this.handleChange}
@@ -89,7 +92,7 @@ class Subscribe extends Component {
               </FormControl>
               <FormControl fullWidth sx={{ mt: 2 }}>
                 <TextField
-                  label="MotDePasse"
+                  label="Mot De Passe"
                   type="password"
                   variant="outlined"
                   value={this.state.password}
@@ -99,7 +102,7 @@ class Subscribe extends Component {
               </FormControl>
               <FormControl fullWidth sx={{ mt: 2 }}>
                 <TextField
-                  label="Confirmer votre Mot de Passe"
+                  label="Confirmer Mot de Passe"
                   type="password"
                   variant="outlined"
                   value={this.state.confirmPassword}

@@ -33,68 +33,73 @@ class Login extends Component {
   submitLogin = async () => {
     const { email, password } = this.state;
     try {
-      const response = await fetch("http://localhost:8080/api/auth/login", {
+      fetch("http://localhost:8080/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
-      });
-      if (response.ok) {
-        console.log("Connexion effectuée avec succès");
-        // Réinitialiser l'état pour nettoyer le formulaire ici
-        this.setState({
-          email: "",
-          password: "",
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.token) {
+            sessionStorage.setItem("jwtToken", data.token); // Storing the token in sessionStorage
+            console.log("Login successful and token stored");
+            console.log("Le token est" + sessionStorage.getItem('jwtToken'))
+            this.setState({
+              email: "",
+              password: "",
+            });
+            window.location.href = "/home"
+          } else {
+            console.log("Login failed");
+          }
         });
-        window.location.href = "/home"
-      } else {
-        const errorData = await response.json();
-        console.error("Erreur lors de la connexion", errorData);
-      }
     } catch (error) {
       console.error("Erreur lors du fetch: " + error.message);
     }
   };
   render() {
+    if (sessionStorage.getItem('jwtToken')){
+      window.location.href = "/home";
+    }
     return (
       <div>
-        
-          <Box>
-            <Typography id="modal-title" variant="h6" component="h2">
-              Formulaire de Connexion
-            </Typography>
-            <Box component="form" noValidate autoComplete="off">
-              <FormControl fullWidth sx={{ mt: 2 }}>
-                <TextField
-                  label="Date de la demande"
-                  value={this.state.email}
-                  onChange={this.handleChange}
-                  name="email"
-                />
-              </FormControl>
-              <FormControl fullWidth sx={{ mt: 2 }}>
-                <TextField
-                  label="MotDePasse"
-                  type="password"
-                  variant="outlined"
-                  value={this.state.password}
-                  onChange={this.handleChange}
-                  name="password"
-                />
-              </FormControl>
-              <FormControl fullWidth sx={{ mt: 4 }}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={this.submitLogin}
-                >
-                  Soumettre
-                </Button>
-              </FormControl>
-            </Box>
+        <Box>
+          <Typography id="modal-title" variant="h6" component="h2">
+            Formulaire de Connexion
+          </Typography>
+          <Box component="form" noValidate autoComplete="off">
+            <FormControl fullWidth sx={{ mt: 2 }}>
+              <TextField
+                label="Adresse Email"
+                value={this.state.email}
+                onChange={this.handleChange}
+                name="email"
+              />
+            </FormControl>
+            <FormControl fullWidth sx={{ mt: 2 }}>
+              <TextField
+                label="Mot De Passe"
+                type="password"
+                variant="outlined"
+                value={this.state.password}
+                onChange={this.handleChange}
+                name="password"
+              />
+            </FormControl>
+            <FormControl fullWidth sx={{ mt: 4 }}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={this.submitLogin}
+              >
+                Soumettre
+              </Button>
+            </FormControl>
           </Box>
-        
+        </Box>
+
         <Link to="/">Pas de compte? Inscrivez-Vous!</Link>
       </div>
     );

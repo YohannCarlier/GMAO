@@ -31,7 +31,7 @@ class Home extends Component {
       nomDuDemandeur: '',
     };
   }
-
+  
   handleClickOpen = () => {
     this.setState({ open: true });
   };
@@ -46,6 +46,7 @@ class Home extends Component {
   };
 
   handleSubmit = async () => {
+    const authToken =sessionStorage.getItem('jwtToken');
     const { dateDeLaDemande, interventionType, description, statut, nomDuDemandeur } = this.state;
 
     // Assurez-vous que toutes les valeurs sont non vides avant de soumettre
@@ -60,6 +61,7 @@ class Home extends Component {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + authToken
         },
         body: JSON.stringify({ dateDeLaDemande, interventionType, description, statut, nomDuDemandeur }),
       });
@@ -84,8 +86,25 @@ class Home extends Component {
     }
   };
 
+  handleLogout= async () => {
+    const authToken =sessionStorage.getItem('jwtToken');
+    const response = await fetch('http://localhost:8080/api/auth/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + authToken
+        },
+      });
+      if (response.ok){
+        sessionStorage.removeItem("jwtToken");
+        window.location.href ="/";
+      }
+}
 
   render() {
+    if (!sessionStorage.getItem('jwtToken')){
+      window.location.href = "/";
+    }
     const { interventionType, statut } = this.state;
     return(
       <div className='viewer-home'>
@@ -107,6 +126,11 @@ class Home extends Component {
                 sx={{ backgroundColor: '#000', color: '#fff' }} 
                 onClick={this.handleClickOpen}>
               Demande DI
+            </Button>
+            <Button variant="contained"
+                sx={{ backgroundColor: '#000', color: '#fff' }} 
+                onClick={this.handleLogout}>
+              Se Déconnecter
             </Button>
           </Toolbar>
         </AppBar>
