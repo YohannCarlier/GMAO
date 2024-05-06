@@ -25,12 +25,25 @@ class Home extends Component {
     this.state = {
       open: false,
       dateDeLaDemande: '',
-      interventionType: '', // Assurez-vous d'avoir une valeur par défaut ici
+      interventionType: '', 
       description: '',
-      statut: 'En attente', // Assurez-vous d'avoir une valeur par défaut ici
+      statut: 'En attente', 
       nomDuDemandeur: '',
+      selectedGLOBALID: '',
+      openGlobalIdModal: false,
     };
   }
+
+  handleGlobalIdOpen = () => {
+    this.setState({ openGlobalIdModal: true });
+  };
+  handleGlobalIdClose = () => {
+    this.setState({ openGlobalIdModal: false });
+  };
+
+  setGLOBALID = (GLOBALID) => {
+    this.setState({ selectedGLOBALID: GLOBALID });
+  };
 
   handleClickOpen = () => {
     this.setState({ open: true });
@@ -44,6 +57,7 @@ class Home extends Component {
     const { name, value } = event.target;
     this.setState({ [name]: value });
   };
+  
 
   handleSubmit = async () => {
     const { dateDeLaDemande, interventionType, description, statut, nomDuDemandeur } = this.state;
@@ -86,11 +100,12 @@ class Home extends Component {
 
 
   render() {
-    const { interventionType, statut } = this.state;
+    const { interventionType, statut, openGlobalIdModal, selectedGLOBALID } = this.state;
     return(
       <div className='viewer-home'>
         <AppBar position="static" style={{marginBottom: 25}}>
           <Toolbar>
+
             <IconButton
               size="large"
               edge="start"
@@ -103,14 +118,24 @@ class Home extends Component {
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               Yohann
             </Typography>
-            <Button v variant="contained"
-                sx={{ backgroundColor: '#000', color: '#fff' }} 
+            {/* bouton demande di  */}
+            <Button variant="contained"
+                sx={{ backgroundColor: '#555', color: '#fff' }} 
                 onClick={this.handleClickOpen}>
               Demande DI
             </Button>
+            {/* bouton bobalID  */}
+            <Button variant="contained"
+              sx={{ backgroundColor: '#555', color: '#fff', marginLeft: '10px' }} 
+              onClick={this.handleGlobalIdOpen}>
+              Afficher GLOBALID
+            </Button>
+
           </Toolbar>
         </AppBar>
+        <Viewer setGLOBALID={this.setGLOBALID}/> {/* Passer setGLOBALID comme prop */}
 
+                    {/* Modal Formulaire */}
         <Modal
           open={this.state.open}
           onClose={this.handleClose}
@@ -118,6 +143,21 @@ class Home extends Component {
           aria-describedby="modal-description"
         >
           <Box sx={style}>
+          {/* test */}
+          <FormControl fullWidth sx={{ mt: 2 }}>
+            <TextField
+                label="GLOBALID de l'objet"
+                variant="outlined"
+                value={this.state.selectedGLOBALID} // Afficher le GLOBALID ici
+                onChange={this.handleChange}
+                name="selectedGLOBALID"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+            />
+          </FormControl>
+            {/* fin test  */}
+
             <Typography id="modal-title" variant="h6" component="h2">
               Formulaire de Demande
             </Typography>
@@ -187,6 +227,35 @@ class Home extends Component {
               <FormControl fullWidth sx={{ mt: 4 }}>
               <Button variant="contained" color="primary" onClick={this.handleSubmit}>Soumettre</Button>
               </FormControl>
+            </Box>
+          </Box>
+        </Modal>
+                    {/* Modal globalID */}
+        <Modal
+          open={openGlobalIdModal}
+          onClose={this.handleGlobalIdClose}
+          aria-labelledby="global-id-modal-title"
+          aria-describedby="global-id-modal-description"
+        >
+          <Box sx={style}>
+            <Typography id="global-id-modal-title" variant="h6" component="h2">
+              GLOBALID de l'objet sélectionné
+            </Typography>
+            <TextField
+              fullWidth
+              margin="normal"
+              label="GLOBALID"
+              variant="outlined"
+              value={selectedGLOBALID} // Afficher le GLOBALID ici
+              InputLabelProps={{
+                shrink: true,
+              }}
+              readOnly
+            />
+            <Box textAlign='center' marginTop={2}>
+              <Button variant="contained" color="primary" onClick={this.handleGlobalIdClose}>
+                Fermer
+              </Button>
             </Box>
           </Box>
         </Modal>

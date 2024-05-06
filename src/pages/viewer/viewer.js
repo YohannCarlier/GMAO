@@ -4,9 +4,9 @@ import launchViewer from './ViewerFunctions';
 class Viewer extends Component {
 
     componentDidMount(){
-        
-        var documentId = 'urn:dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6cmVhY3Qtdmlld2VyLWdtYW8vQUMyMC1JbnN0aXR1dGUtVmFyLTIuaWZj';
-        launchViewer('viewerDiv', documentId);
+        console.log("Type of setGLOBALID:", typeof this.props.setGLOBALID);
+        var documentId = 'urn:dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6cHJvamV0LWdtYW8vT2ZmaWNlLnJ2dA';
+        launchViewer('viewerDiv', documentId, this.props.setGLOBALID);
     }
     
     render() {
