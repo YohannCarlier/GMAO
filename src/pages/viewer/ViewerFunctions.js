@@ -49,6 +49,7 @@ function launchViewer(div, urn){
               const dbId = event.dbIdArray[0];
               viewer.getProperties(dbId, (props) => {
                 // Log le GUID ici ou faites ce que vous voulez avec
+                console.log('Le dbid est ' + dbId)
                 console.log('GUID de l\'objet sélectionné:', props.externalId);
                 // Vous pouvez également utiliser un callback ou un événement pour envoyer le GUID à votre composant React
               });

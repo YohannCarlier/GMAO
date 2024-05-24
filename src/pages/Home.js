@@ -5,7 +5,7 @@ import {
   InputLabel
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import Viewer from './viewer/Viewer';
+import Viewer, {createPOI} from './viewer/Viewer';
 
 // Styles for the modal
 const style = {
@@ -29,9 +29,10 @@ class Home extends Component {
       description: '',
       statut: 'En attente', // Assurez-vous d'avoir une valeur par défaut ici
       nomDuDemandeur: '',
+      pois: [],
     };
+    this.myRef = React.createRef();
   }
-  
   handleClickOpen = () => {
     this.setState({ open: true });
   };
@@ -46,7 +47,7 @@ class Home extends Component {
   };
 
   handleSubmit = async () => {
-    const authToken =sessionStorage.getItem('jwtToken');
+    const authToken =sessionStorage.getItem('jwtTokenAuth');
     const { dateDeLaDemande, interventionType, description, statut, nomDuDemandeur } = this.state;
 
     // Assurez-vous que toutes les valeurs sont non vides avant de soumettre
@@ -87,7 +88,7 @@ class Home extends Component {
   };
 
   handleLogout= async () => {
-    const authToken =sessionStorage.getItem('jwtToken');
+    const authToken =sessionStorage.getItem('jwtTokenAuth');
     const response = await fetch('http://localhost:8080/api/auth/logout', {
         method: 'POST',
         headers: {
@@ -96,16 +97,33 @@ class Home extends Component {
         },
       });
       if (response.ok){
-        sessionStorage.removeItem("jwtToken");
+        sessionStorage.removeItem("jwtTokenAuth");
         window.location.href ="/";
       }
 }
 
   render() {
-    if (!sessionStorage.getItem('jwtToken')){
+    if (!sessionStorage.getItem('jwtTokenAuth')){
       window.location.href = "/";
     }
     const { interventionType, statut } = this.state;
+
+    //PARTIE POUR LES POI
+    const handleClickOnModel = (event) => {
+      const viewer = this.myRef.current.viewer;
+      const { clientX, clientY } = event;
+      const screenPoint = { x: clientX, y: clientY };
+      const worldCoords = viewer.clientToWorld(screenPoint.x, screenPoint.y);
+
+      if (worldCoords) {
+        const newPoi = { position: worldCoords.point, label: `POI ${this.state.pois.length + 1}` };
+        createPOI(viewer, newPoi.position, newPoi);
+        this.setState((prevState) => ({
+          pois: [...prevState.pois, newPoi],
+        }));
+      }
+    };
+    //FIN DES POI 
     return(
       <div className='viewer-home'>
         <AppBar position="static" style={{marginBottom: 25}}>
@@ -214,8 +232,9 @@ class Home extends Component {
             </Box>
           </Box>
         </Modal>
-
+        <div onClick={handleClickOnModel} ref={this.myRef}>
         <Viewer/>
+        </div>
       </div>
     )
   }

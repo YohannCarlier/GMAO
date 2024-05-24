@@ -43,9 +43,9 @@ class Login extends Component {
         .then((response) => response.json())
         .then((data) => {
           if (data.token) {
-            sessionStorage.setItem("jwtToken", data.token); // Storing the token in sessionStorage
+            sessionStorage.setItem("jwtTokenAuth", data.token); // Storing the token in sessionStorage
             console.log("Login successful and token stored");
-            console.log("Le token est" + sessionStorage.getItem('jwtToken'))
+            console.log("Le token est" + sessionStorage.getItem('jwtTokenAutg'))
             this.setState({
               email: "",
               password: "",
@@ -60,7 +60,7 @@ class Login extends Component {
     }
   };
   render() {
-    if (sessionStorage.getItem('jwtToken')){
+    if (sessionStorage.getItem('jwtTokenAuth')){
       window.location.href = "/home";
     }
     return (

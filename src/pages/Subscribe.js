@@ -71,7 +71,7 @@ class Subscribe extends Component {
     }
   };
   render() {
-    if (sessionStorage.getItem('jwtToken')){
+    if (sessionStorage.getItem('jwtTokenAuth')){
       window.location.href = "/home";
     }
     return (

@@ -1,0 +1,58 @@
+.poiEntry {
+    float:left;
+    width: 100%;
+    padding-left: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid;
+}
+
+.poiEntry:hover { 
+    background-color: lightskyblue;
+}
+
+.poiTitle {
+    float:left;
+    width: 100%;
+    padding-left: 5px;
+    padding-top: 15px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid;
+    border-top: 1px solid;
+    color: white;
+    background-color: rgb(33,153,212);
+    font-weight: bold;
+}
+
+.poiList {
+    width:25%;
+    height: 250px;
+
+    float: left;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.poiPicDiv {
+    width:25%;
+    height: 250px;
+    float: left;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.poiPic {
+    width:100%;
+    height: 250px;
+    float: right;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.lightgrey {
+    background-color: white;
+}
+
+.selected {
+    background-color: lightskyblue;
+    font-weight: bold;
+    color: white;
+}
