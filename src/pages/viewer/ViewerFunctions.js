@@ -1,9 +1,10 @@
 /* global Autodesk */
 import Client from "../Auth";
+import {findDOMNode} from 'react-dom';
 // import axios from "axios";
 
 var getToken = {accessToken: Client.getAccesstoken()};
-var viewer;
+export var viewer;
 
 function launchViewer(div, urn){
     
@@ -16,7 +17,8 @@ function launchViewer(div, urn){
 
         Autodesk.Viewing.Initializer(options, function() {
 
-            var htmlDiv = document.getElementById(div);
+            //var htmlDiv = document.getElementById('viewerDiv');
+            var htmlDiv = findDOMNode(div);
             viewer = new Autodesk.Viewing.GuiViewer3D(htmlDiv);
             var startedCode = viewer.start();
             if (startedCode > 0) {
@@ -27,7 +29,7 @@ function launchViewer(div, urn){
             console.log('Initialization complete, loading a model next...');
 
         });
-
+        console.log(viewer)
         var documentId = urn;
         Autodesk.Viewing.Document.load(documentId, onDocumentLoadSuccess, onDocumentLoadFailure);
 
@@ -52,6 +54,7 @@ function launchViewer(div, urn){
                 console.log('Le dbid est ' + dbId)
                 console.log('GUID de l\'objet sélectionné:', props.externalId);
                 // Vous pouvez également utiliser un callback ou un événement pour envoyer le GUID à votre composant React
+                
               });
             }
           }

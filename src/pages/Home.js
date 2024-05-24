@@ -6,6 +6,7 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Viewer, {createPOI} from './viewer/Viewer';
+import { viewer as ViewerInstance}  from './viewer/ViewerFunctions';
 
 // Styles for the modal
 const style = {
@@ -32,6 +33,7 @@ class Home extends Component {
       pois: [],
     };
     this.myRef = React.createRef();
+    this.viewerRef = React.createRef();
   }
   handleClickOpen = () => {
     this.setState({ open: true });
@@ -110,13 +112,20 @@ class Home extends Component {
 
     //PARTIE POUR LES POI
     const handleClickOnModel = (event) => {
-      const viewer = this.myRef.current.viewer;
-      const { clientX, clientY } = event;
-      const screenPoint = { x: clientX, y: clientY };
-      const worldCoords = viewer.clientToWorld(screenPoint.x, screenPoint.y);
+      const viewer = ViewerInstance ; 
+      if (!viewer) {
+        console.error('Viewer not initialized');
+        return;
+      }
+      const screenPoint = { x: event.clientX, y: event.clientY };
+      console.log(screenPoint)
+      const hitTestResult = viewer.impl.hitTest(event.clientX, event.clientY, true);
+      console.log(hitTestResult);
 
-      if (worldCoords) {
-        const newPoi = { position: worldCoords.point, label: `POI ${this.state.pois.length + 1}` };
+      if (hitTestResult) {
+        console.log('entrée dans la boucle if')
+        const worldPoint = hitTestResult.intersectPoint;
+        const newPoi = { position: worldPoint, label: `POI ${this.state.pois.length + 1}` };
         createPOI(viewer, newPoi.position, newPoi);
         this.setState((prevState) => ({
           pois: [...prevState.pois, newPoi],
@@ -232,8 +241,8 @@ class Home extends Component {
             </Box>
           </Box>
         </Modal>
-        <div onClick={handleClickOnModel} ref={this.myRef}>
-        <Viewer/>
+        <div onClick={handleClickOnModel} ref={this.myRef} >
+          <Viewer ref={this.viewerRef}/>
         </div>
       </div>
     )
