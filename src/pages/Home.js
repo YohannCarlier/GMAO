@@ -30,9 +30,17 @@ class Home extends Component {
       statut: 'En attente', 
       nomDuDemandeur: '',
       selectedGLOBALID: '',
+      showSprite: false, // État pour contrôler l'affichage du sprite
       openGlobalIdModal: false,
     };
   }
+
+  handleToggleSprite = () => {
+    console.log("Avant changement: ", this.state.showSprite); // Ajout pour vérification
+    this.setState({ showSprite: !this.state.showSprite }, () => {
+      console.log("Après changement: ", this.state.showSprite); // Ajout pour vérification
+    });
+  };
 
   handleGlobalIdOpen = () => {
     this.setState({ openGlobalIdModal: true });
@@ -100,7 +108,7 @@ class Home extends Component {
 
 
   render() {
-    const { interventionType, statut, openGlobalIdModal, selectedGLOBALID } = this.state;
+    const { interventionType, statut, openGlobalIdModal, selectedGLOBALID, showSprite } = this.state;
     return(
       <div className='viewer-home'>
         <AppBar position="static" style={{marginBottom: 25}}>
@@ -130,10 +138,16 @@ class Home extends Component {
               onClick={this.handleGlobalIdOpen}>
               Afficher GLOBALID
             </Button>
+            {/* bouton sprite  */}
+            <Button variant="contained"
+                    sx={{ backgroundColor: '#555', color: '#fff', marginLeft: '10px' }} 
+                    onClick={this.handleToggleSprite}>
+              Afficher Sprite
+            </Button>
 
           </Toolbar>
         </AppBar>
-        <Viewer setGLOBALID={this.setGLOBALID}/> {/* Passer setGLOBALID comme prop */}
+        <Viewer setGLOBALID={this.setGLOBALID} showSprite={showSprite} selectedGLOBALID={selectedGLOBALID}/> {/* Passer setGLOBALID comme prop */}
 
                     {/* Modal Formulaire */}
         <Modal
