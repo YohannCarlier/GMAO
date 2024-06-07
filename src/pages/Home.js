@@ -31,6 +31,10 @@ class Home extends Component {
       statut: 'En attente', // Assurez-vous d'avoir une valeur par défaut ici
       nomDuDemandeur: '',
       pois: [],
+      poiMenuOpened: false,
+      nomduPoi: '',
+      descriptionDuPoi: '',
+      worldPoint: '',
     };
     this.myRef = React.createRef();
     this.viewerRef = React.createRef();
@@ -41,6 +45,7 @@ class Home extends Component {
 
   handleClose = () => {
     this.setState({ open: false });
+    this.setState({ poiMenuOpened: false });
   };
 
   handleChange = (event) => {
@@ -102,8 +107,20 @@ class Home extends Component {
         sessionStorage.removeItem("jwtTokenAuth");
         window.location.href ="/";
       }
-}
-
+    }
+    
+    handlePoiCreation = async () => {
+      const newPoi = { position: this.state.worldPoint, label: `${this.state.pois.length + 1}: ${this.state.nomduPoi}`, description: this.state.descriptionDuPoi };
+      createPOI(ViewerInstance, newPoi.position, newPoi);
+        this.setState((prevState) => ({
+          pois: [...prevState.pois, newPoi],
+        }));
+        this.setState({
+          nomduPoi: '',
+          descriptionDuPoi: '',
+        });
+        this.handleClose();
+    }
   render() {
     if (!sessionStorage.getItem('jwtTokenAuth')){
       window.location.href = "/";
@@ -112,6 +129,7 @@ class Home extends Component {
 
     //PARTIE POUR LES POI
     const handleClickOnModel = (event) => {
+      this.setState({ poiMenuOpened: true });
       const viewer = ViewerInstance ; 
       if (!viewer) {
         console.error('Viewer not initialized');
@@ -124,14 +142,12 @@ class Home extends Component {
 
       if (hitTestResult) {
         console.log('entrée dans la boucle if')
-        const worldPoint = hitTestResult.intersectPoint;
-        const newPoi = { position: worldPoint, label: `POI ${this.state.pois.length + 1}` };
-        createPOI(viewer, newPoi.position, newPoi);
-        this.setState((prevState) => ({
-          pois: [...prevState.pois, newPoi],
-        }));
+        this.setState({worldPoint: hitTestResult.intersectPoint});
+      }else{
+        this.setState({ poiMenuOpened: false });
       }
-    };
+    };  
+
     //FIN DES POI 
     return(
       <div className='viewer-home'>
@@ -244,6 +260,41 @@ class Home extends Component {
         <div onClick={handleClickOnModel} ref={this.myRef} >
           <Viewer ref={this.viewerRef}/>
         </div>
+        <Modal
+        //Formulaire choix nom POI et description
+          open={this.state.poiMenuOpened}
+          onClose={this.handleClose}
+          aria-labelledby="POI-Modal"
+          aria-describedby="modal-description"
+        >
+          <Box sx={style}>
+            <Typography id="poi-title²²" variant="h6" component="h2">
+              Formulaire de Demande
+            </Typography>
+            <Box component="form" noValidate autoComplete="off">
+              <FormControl fullWidth sx={{ mt: 2 }}>
+                <TextField
+                  label="Nom du Point d'Interêt"
+                  value={this.state.nomduPoi}
+                  onChange={this.handleChange}
+                  name="nomduPoi"
+                />
+              </FormControl>
+              <FormControl fullWidth sx={{ mt: 2 }}>
+                <TextField label="Description" 
+                  multiline 
+                  rows={4} 
+                  variant="outlined" 
+                  value={this.state.descriptionDuPoi}
+                  onChange={this.handleChange}
+                  name="descriptionDuPoi" />
+              </FormControl>
+              <FormControl fullWidth sx={{ mt: 4 }}>
+              <Button variant="contained" color="primary" onClick={this.handlePoiCreation}>Soumettre</Button>
+              </FormControl>
+            </Box>
+          </Box>
+        </Modal>
       </div>
     )
   }

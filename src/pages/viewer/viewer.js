@@ -122,6 +122,7 @@ export const createPOI = (viewer, position, poiData) => {
     const sprite = createPOISprite(poiData);
     sprite.position.set(position.x, position.y, position.z);
     sprite.name=poiData.label;
+    sprite.description=poiData.description;
     viewer.impl.addOverlay(overlayName, sprite);
     console.log(sprite)
     console.log('étape 4')
